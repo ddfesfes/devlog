@@ -1,0 +1,179 @@
+
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { projects, type Project } from "../../data/projects";
+
+export async function getStaticPaths() {
+  return projects.map((project: Project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props as {
+  project: Project;
+};
+---
+
+<BaseLayout
+  title={`${project.name} — Archive`}
+  description={project.description}
+>
+  <a class="back-link" href="/projects">← Projects</a>
+
+  <section class="project-detail">
+    <span class="number">{project.number} / PROJECT</span>
+
+    {project.image && (
+      <img
+        class="project-image"
+        src={project.image}
+        alt={`${project.name} preview`}
+      />
+    )}
+
+    <h1>{project.name}</h1>
+    <p class="category">{project.category}</p>
+
+    <p class="description">{project.description}</p>
+
+    <div class="content">
+      {project.content.map((section) => (
+        <section class="content-section">
+          <h2>{section.heading}</h2>
+          <p>{section.body}</p>
+        </section>
+      ))}
+    </div>
+
+    <div class="tech-section">
+      <h2>Tech Stack</h2>
+
+      <div class="tech-list">
+        {project.tech.map((item) => <span>{item}</span>)}
+      </div>
+    </div>
+
+    {project.link !== "#" && (
+      <a
+        class="project-link"
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Visit Project ↗
+      </a>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .back-link {
+    display: inline-block;
+    margin-top: 48px;
+    color: #888;
+    font-size: 13px;
+  }
+
+  .back-link:hover {
+    color: #222;
+  }
+
+  .project-detail {
+    padding: 80px 0 120px;
+    max-width: 680px;
+  }
+
+  .number {
+    color: #999;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .project-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-top: 32px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    object-fit: cover;
+  }
+
+  h1 {
+    margin: 32px 0 8px;
+    font-size: 42px;
+    letter-spacing: -1.5px;
+  }
+
+  .category {
+    color: #888;
+    font-size: 13px;
+  }
+
+  .description {
+    margin-top: 40px;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  .content {
+    margin-top: 48px;
+  }
+
+  .content-section {
+    margin-bottom: 36px;
+  }
+
+  .content-section h2 {
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+
+  .content-section p {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  .tech-section {
+    margin-top: 56px;
+  }
+
+  .tech-section h2 {
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tech-list span {
+    padding: 7px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    color: #666;
+    font-size: 12px;
+  }
+
+  .project-link {
+    display: inline-block;
+    margin-top: 48px;
+    font-size: 13px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .project-detail {
+      padding-top: 60px;
+    }
+
+    h1 {
+      font-size: 32px;
+    }
+  }
+</style>

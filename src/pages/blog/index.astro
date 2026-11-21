@@ -1,0 +1,147 @@
+
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = await getCollection("blog");
+
+posts.sort(
+  (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+    b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
+---
+
+<BaseLayout title="Blog — Archive">
+  <section class="intro">
+    <span>WRITING & NOTES</span>
+    <h1>Blog</h1>
+    <p>개발과 공부, 일상에서 얻은 생각들을 기록합니다.</p>
+  </section>
+
+  <section class="post-list">
+    {posts.map((post: CollectionEntry<"blog">) => (
+      <article class="post">
+        <div class="meta">
+          <time>{post.data.pubDate.toLocaleDateString("ko-KR")}</time>
+          <span>{post.data.category}</span>
+        </div>
+
+        <div class="content">
+          <h2>
+            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          </h2>
+          <p>{post.data.description}</p>
+        </div>
+
+        <a class="arrow" href={`/blog/${post.id}`} aria-label={`${post.data.title} 읽기`}>
+          ↗
+        </a>
+      </article>
+    ))}
+
+    {posts.length === 0 && (
+      <p class="empty">아직 작성된 글이 없습니다.</p>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    padding: 85px 0 55px;
+  }
+
+  .intro > span,
+  .meta span {
+    color: #999;
+    font-size: 11px;
+    letter-spacing: 1px;
+  }
+
+  h1 {
+    font-size: 48px;
+    letter-spacing: -2px;
+    margin: 15px 0;
+  }
+
+  .intro p {
+    color: #888;
+    font-size: 14px;
+  }
+
+  .post-list {
+    padding-bottom: 100px;
+  }
+
+  .post {
+    display: grid;
+    grid-template-columns: 150px 1fr 20px;
+    gap: 25px;
+    align-items: center;
+    padding: 27px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .meta time {
+    font-size: 11px;
+    color: #999;
+  }
+
+  h2 {
+    font-size: 17px;
+    margin: 0 0 9px;
+  }
+
+  h2 a:hover {
+    color: #777;
+  }
+
+  .content p {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .arrow {
+    color: #aaa;
+    transition: color 0.2s;
+  }
+
+  .arrow:hover {
+    color: #222;
+  }
+
+  .empty {
+    padding: 40px 0;
+    color: #999;
+    font-size: 14px;
+  }
+
+  @media (max-width: 600px) {
+    .post {
+      grid-template-columns: 1fr 20px;
+      gap: 10px;
+    }
+
+    .meta {
+      grid-column: 1;
+      flex-direction: row;
+      gap: 12px;
+    }
+
+    .content {
+      grid-column: 1;
+    }
+
+    .arrow {
+      grid-column: 2;
+      grid-row: 1 / 3;
+    }
+  }
+</style>
