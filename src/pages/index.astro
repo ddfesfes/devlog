@@ -1,10 +1,10 @@
-
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
-import { projects } from "../data/projects";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
+const projects = await getCollection("projects");
 const posts = await getCollection("blog");
+const base = import.meta.env.BASE_URL;
 
 posts.sort(
   (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
@@ -28,27 +28,32 @@ const latestPosts = posts.slice(0, 3);
   <section class="section">
     <div class="section-heading">
       <h2>Selected Projects</h2>
-      <a href="/projects">View all ↗</a>
+      <a href={`${base}projects`}>View all ↗</a>
     </div>
 
     <div class="project-grid">
       {projects.map((project) => (
         <article class="project">
-          <a class="project-image" href={`/projects/${project.slug}`}>
-            {project.image ? (
-              <img src={project.image} alt={`${project.name} preview`} />
+          <a class="project-image" href={`${base}projects/${project.id}`}>
+            {project.data.image ? (
+              <img
+                src={`${base}${project.data.image.replace(/^\/+/, "")}`}
+                alt={`${project.data.name} preview`}
+              />
             ) : (
-              <span>{project.number}</span>
+              <span>{project.data.number}</span>
             )}
           </a>
 
-          <span class="category">{project.category}</span>
+          <span class="category">{project.data.category}</span>
 
           <h3>
-            <a href={`/projects/${project.slug}`}>{project.name}</a>
+            <a href={`${base}projects/${project.id}`}>
+              {project.data.name}
+            </a>
           </h3>
 
-          <p>{project.description}</p>
+          <p>{project.data.description}</p>
         </article>
       ))}
     </div>
@@ -65,7 +70,7 @@ const latestPosts = posts.slice(0, 3);
         <time>{post.data.pubDate.toLocaleDateString("ko-KR")}</time>
 
         <h3>
-          <a href={`/blog/${post.id}`}>{post.data.title}</a>
+          <a href={`${base}blog/${post.id}`}>{post.data.title}</a>
         </h3>
 
         <span class="category">{post.data.category}</span>
