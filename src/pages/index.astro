@@ -62,7 +62,7 @@ const latestPosts = posts.slice(0, 3);
   <section class="section posts">
     <div class="section-heading">
       <h2>Latest Posts</h2>
-      <a href="/blog">View all ↗</a>
+      <a href={`${base}blog`}>View all ↗</a>
     </div>
 
     {latestPosts.map((post: CollectionEntry<"blog">) => (
