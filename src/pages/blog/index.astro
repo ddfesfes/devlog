@@ -3,6 +3,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
+const base = import.meta.env.BASE_URL.replace(/\/?$/, "/");
 const posts = await getCollection("blog");
 
 posts.sort(
@@ -28,12 +29,12 @@ posts.sort(
 
         <div class="content">
           <h2>
-            <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            <a href={`${base}blog/${post.id}`}>{post.data.title}</a>
           </h2>
           <p>{post.data.description}</p>
         </div>
 
-        <a class="arrow" href={`/blog/${post.id}`} aria-label={`${post.data.title} 읽기`}>
+        <a class="arrow" href={`${base}blog/${post.id}`} aria-label={`${post.data.title} 읽기`}>
           ↗
         </a>
       </article>
